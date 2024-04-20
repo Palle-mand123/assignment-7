@@ -129,6 +129,24 @@ void init_lcd() {
     delay_ms(1);
 }
 
+void status_led_init(void)
+/*****************************************************************************
+*   Input    :  -
+*   Output   :  -
+*   Function :
+*****************************************************************************/
+{
+  INT8S dummy;
+  // Enable the GPIO port that is used for the on-board LED.
+  SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOD;
+
+  // Do a dummy read to insert a few cycles after enabling the peripheral.
+  dummy = SYSCTL_RCGC2_R;
+
+  GPIO_PORTD_DIR_R |= 0x40;
+  GPIO_PORTD_DEN_R |= 0x40;
+}
+
 
 void lcd_clear() { // Clear the display
     lcd_send_command(LCD_CLEAR);  // Send the clear display command
@@ -164,11 +182,16 @@ void lcd_print(char *str) { // Print a string at the current cursor position
 
 void lcd_task(void *pvParameters)
 {
+    status_led_init();
+
+
 
     lcd_clear();
     vTaskDelay(1);
     lcd_send_command(LCD_RETURN_HOME);
     vTaskDelay(1);
     while (1){
+    GPIO_PORTD_DATA_R ^= 0x40;
+    vTaskDelay(500 / portTICK_RATE_MS); // wait 500 ms.
     lcd_print("#");}
 }

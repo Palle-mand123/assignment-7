@@ -5,6 +5,7 @@
 #include "tm4c123gh6pm.h"
 #include "portmacro.h"
 #include "semphr.h"
+#include <stdint.h>
 
 
 
@@ -25,22 +26,19 @@ uint8_t LCD_D7_PIN = 0x80; // PC7 for LCD D7
 uint8_t LCD_RS_PIN = 0x04; // PD2 for LCD RS
 uint8_t LCD_E_PIN  = 0x08; // PD3 for LCD E
 
+void delay_ms(uint32_t ms) {
 
+    volatile uint32_t i, j;
+    for (i = 0; i < ms; i++) {
+        for (j = 0; j < 16000; j++) {
 
-void delay_ms(TickType_t ms)
-{
-    // Calculate the number of ticks from milliseconds.
-    // Each tick is 1 ms in this case.
-    TickType_t ticks = ms;
-
-    // Ensure we wait for at least one tick if the calculation is less than one tick period.
-    if (ticks == 0)
-    {
-        ticks = 1;
+        }
     }
-
-    vTaskDelay(ticks);
 }
+
+
+
+
 
 
 
@@ -168,9 +166,9 @@ void lcd_task(void *pvParameters)
 {
 
     lcd_clear();
-    delay_ms(2);
+    vTaskDelay(1);
     lcd_send_command(LCD_RETURN_HOME);
-    delay_ms(2);
+    vTaskDelay(1);
     while (1){
     lcd_print("#");}
 }

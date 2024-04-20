@@ -28,6 +28,7 @@ static void setupHardware(void)
 
 {
     init_systick();
+    status_led_init();
     init_lcd();
   //keypad_init();
 

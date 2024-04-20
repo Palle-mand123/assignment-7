@@ -30,5 +30,6 @@ void lcd_clear(void);
 void lcd_set_cursor(int row, int col);
 void lcd_print(char *str);
 void lcd_task(void *pvParameters);
+void status_led_init(void);
 
 #endif /* LCD_H */
